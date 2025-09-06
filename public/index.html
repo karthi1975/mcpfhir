@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HAPI FHIR Patient Manager</title>
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🏥 HAPI FHIR Patient Manager</h1>
+            <p>Create and search patients using HAPI FHIR Server</p>
+            <div class="status">✅ Connected to HAPI FHIR</div>
+        </header>
+
+        <div class="grid">
+            <div class="card">
+                <h2>➕ Create Patient</h2>
+                <form id="createForm">
+                    <input type="text" id="firstName" placeholder="First Name" value="John" required>
+                    <input type="text" id="lastName" placeholder="Last Name" value="Doe" required>
+                    <input type="date" id="birthDate" value="1990-01-01" required>
+                    <select id="gender" required>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                        <option value="other">Other</option>
+                    </select>
+                    <input type="tel" id="phone" placeholder="Phone" value="555-0123">
+                    <input type="email" id="email" placeholder="Email" value="john@example.com">
+                    <button type="submit">Create Patient</button>
+                </form>
+                <div id="createResult"></div>
+            </div>
+
+            <div class="card">
+                <h2>🔍 Search Patients</h2>
+                <form id="searchForm">
+                    <input type="text" id="searchName" placeholder="Search by name (or leave empty)">
+                    <select id="searchGender">
+                        <option value="">All Genders</option>
+                        <option value="male">Male</option>
+                        <option value="female">Female</option>
+                    </select>
+                    <button type="submit">Search</button>
+                </form>
+                <div id="searchResults"></div>
+            </div>
+        </div>
+
+        <div class="card">
+            <h2>📝 Recently Created</h2>
+            <div id="recentPatients">No patients created yet</div>
+        </div>
+    </div>
+
+    <script src="app.js"></script>
+</body>
+</html>
