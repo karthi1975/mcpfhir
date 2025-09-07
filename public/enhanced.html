@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HAPI FHIR Patient Manager - Create and manage patient records using FHIR standards">
+    <meta name="theme-color" content="#2563eb">
+    <title>HAPI FHIR Patient Manager - Enhanced UI</title>
+    <link rel="stylesheet" href="enhanced-styles.css">
+    <!-- Accessibility: Skip to main content link -->
+    <style>
+        .skip-link {
+            position: absolute;
+            top: -40px;
+            left: 0;
+            background: var(--primary-600);
+            color: white;
+            padding: 8px;
+            text-decoration: none;
+            z-index: 100;
+        }
+        .skip-link:focus {
+            top: 0;
+        }
+    </style>
+</head>
+<body>
+    <a href="#main" class="skip-link">Skip to main content</a>
+    
+    <div class="container">
+        <header class="header" role="banner">
+            <h1>
+                <span aria-hidden="true">🏥</span>
+                HAPI FHIR Patient Manager
+            </h1>
+            <p>Create and search patient records using FHIR R4 standards</p>
+            <div class="status-badge" role="status" aria-live="polite">
+                Connected to SMART Health IT FHIR Server
+            </div>
+        </header>
+
+        <main id="main" class="grid" role="main">
+            <!-- Create Patient Card -->
+            <section class="card" aria-labelledby="create-heading">
+                <h2 id="create-heading">
+                    <span class="icon" aria-hidden="true">➕</span>
+                    Create New Patient
+                </h2>
+                
+                <form id="createForm" class="form" aria-label="Create patient form">
+                    <div class="form-group">
+                        <label for="firstName" class="form-label">
+                            First Name <span aria-label="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="firstName" 
+                            name="firstName"
+                            class="form-input" 
+                            placeholder="Enter first name"
+                            required 
+                            aria-required="true"
+                            aria-describedby="firstName-error"
+                        >
+                        <span id="firstName-error" class="error-message" role="alert"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="lastName" class="form-label">
+                            Last Name <span aria-label="required">*</span>
+                        </label>
+                        <input 
+                            type="text" 
+                            id="lastName" 
+                            name="lastName"
+                            class="form-input" 
+                            placeholder="Enter last name"
+                            required 
+                            aria-required="true"
+                            aria-describedby="lastName-error"
+                        >
+                        <span id="lastName-error" class="error-message" role="alert"></span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="birthDate" class="form-label">
+                            Date of Birth <span aria-label="required">*</span>
+                        </label>
+                        <input 
+                            type="date" 
+                            id="birthDate" 
+                            name="birthDate"
+                            class="form-input" 
+                            required 
+                            aria-required="true"
+                            aria-describedby="birthDate-help"
+                            max=""
+                        >
+                        <span id="birthDate-help" class="form-help">Format: MM/DD/YYYY</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="gender" class="form-label">
+                            Gender <span aria-label="required">*</span>
+                        </label>
+                        <select 
+                            id="gender" 
+                            name="gender"
+                            class="form-select" 
+                            required 
+                            aria-required="true"
+                        >
+                            <option value="">Select gender</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="unknown">Unknown</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="phone" class="form-label">Phone Number</label>
+                        <input 
+                            type="tel" 
+                            id="phone" 
+                            name="phone"
+                            class="form-input" 
+                            placeholder="555-1234"
+                            pattern="[0-9]{3}-[0-9]{4}"
+                            aria-describedby="phone-help"
+                        >
+                        <span id="phone-help" class="form-help">Format: 555-1234</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email" class="form-label">Email Address</label>
+                        <input 
+                            type="email" 
+                            id="email" 
+                            name="email"
+                            class="form-input" 
+                            placeholder="patient@example.com"
+                            aria-describedby="email-help"
+                        >
+                        <span id="email-help" class="form-help">Optional contact email</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="createBtn">
+                        <span id="createBtnText">Create Patient</span>
+                        <span id="createLoader" class="loading" style="display: none;" aria-hidden="true"></span>
+                    </button>
+                </form>
+
+                <div id="createResult" role="status" aria-live="polite" aria-atomic="true"></div>
+            </section>
+
+            <!-- Search Patients Card -->
+            <section class="card" aria-labelledby="search-heading">
+                <h2 id="search-heading">
+                    <span class="icon" aria-hidden="true">🔍</span>
+                    Search Patients
+                </h2>
+                
+                <form id="searchForm" class="form" aria-label="Search patients form">
+                    <div class="form-group">
+                        <label for="searchName" class="form-label">Patient Name</label>
+                        <input 
+                            type="text" 
+                            id="searchName" 
+                            name="searchName"
+                            class="form-input" 
+                            placeholder="Search by name (optional)"
+                            aria-describedby="searchName-help"
+                        >
+                        <span id="searchName-help" class="form-help">Leave empty to show all patients</span>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="searchGender" class="form-label">Filter by Gender</label>
+                        <select 
+                            id="searchGender" 
+                            name="searchGender"
+                            class="form-select"
+                            aria-describedby="searchGender-help"
+                        >
+                            <option value="">All Genders</option>
+                            <option value="male">Male</option>
+                            <option value="female">Female</option>
+                            <option value="other">Other</option>
+                            <option value="unknown">Unknown</option>
+                        </select>
+                        <span id="searchGender-help" class="form-help">Optional gender filter</span>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary" id="searchBtn">
+                        <span id="searchBtnText">Search Patients</span>
+                        <span id="searchLoader" class="loading" style="display: none;" aria-hidden="true"></span>
+                    </button>
+                </form>
+
+                <div id="searchResults" class="patient-list" role="region" aria-live="polite" aria-label="Search results">
+                    <div class="empty-state">
+                        <div class="empty-state-icon" aria-hidden="true">📋</div>
+                        <p>No search performed yet</p>
+                        <p>Use the form above to search for patients</p>
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- Recently Created Patients -->
+        <section class="card" aria-labelledby="recent-heading">
+            <h2 id="recent-heading">
+                <span class="icon" aria-hidden="true">📝</span>
+                Recently Created Patients
+            </h2>
+            <div id="recentPatients" class="patient-list" role="region" aria-live="polite" aria-label="Recent patients">
+                <div class="empty-state">
+                    <div class="empty-state-icon" aria-hidden="true">🆕</div>
+                    <p>No patients created yet</p>
+                    <p>Create your first patient using the form above</p>
+                </div>
+            </div>
+        </section>
+
+        <!-- Stats Dashboard -->
+        <section class="card" aria-labelledby="stats-heading">
+            <h2 id="stats-heading">
+                <span class="icon" aria-hidden="true">📊</span>
+                Statistics
+            </h2>
+            <div class="stats-grid" role="group" aria-label="Patient statistics">
+                <div class="stat-item">
+                    <span class="stat-label">Total Patients Created</span>
+                    <span class="stat-value" id="totalCreated">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Last Search Results</span>
+                    <span class="stat-value" id="lastSearchCount">0</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-label">Server Status</span>
+                    <span class="stat-value" id="serverStatus">Connected</span>
+                </div>
+            </div>
+        </section>
+    </div>
+
+    <!-- Enhanced JavaScript -->
+    <script src="enhanced-app.js"></script>
+</body>
+</html>

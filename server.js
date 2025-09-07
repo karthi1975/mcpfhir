@@ -3,11 +3,16 @@ const cors = require('cors');
 const axios = require('axios');
 const path = require('path');
 
+// Load environment variables in development
+if (process.env.NODE_ENV !== 'production') {
+  require('dotenv').config();
+}
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// HAPI FHIR Server URL
-const HAPI_BASE_URL = 'https://hapi.fhir.org/baseR4';
+// FHIR Server URL - Using environment variable or default
+const HAPI_BASE_URL = process.env.FHIR_BASE_URL || 'https://launch.smarthealthit.org/v/r4/fhir';
 
 // Middleware
 app.use(cors());
@@ -79,9 +84,13 @@ app.post('/api/patient', async (req, res) => {
     
   } catch (error) {
     console.error('Error creating patient:', error.message);
+    if (error.response && error.response.data) {
+      console.error('HAPI Server Response:', JSON.stringify(error.response.data, null, 2));
+    }
     res.status(500).json({
       success: false,
-      error: error.message
+      error: `HAPI Server Error: ${error.message}. The public HAPI test server may be temporarily unavailable. Please try again in a moment.`,
+      details: error.response?.data
     });
   }
 });

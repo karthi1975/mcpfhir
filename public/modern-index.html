@@ -1,0 +1,195 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="HAPI FHIR Patient Manager - Create and manage patient records using FHIR standards">
+    <meta name="theme-color" content="#0ea5e9">
+    <title>HAPI FHIR Patient Manager - Modern UI</title>
+    <link rel="stylesheet" href="modern-styles.css">
+    
+    <!-- Preconnect to external resources -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+</head>
+<body>
+    <!-- Skip to content link for accessibility -->
+    <a href="#main" class="skip-to-content">Skip to main content</a>
+    
+    <div class="container">
+        <header role="banner">
+            <h1>
+                <span class="header-icon" aria-hidden="true">🏥</span>
+                HAPI FHIR Patient Manager
+            </h1>
+            <p>Create and search patients using HAPI FHIR Server</p>
+            <div class="status" role="status" aria-live="polite">
+                Connected to HAPI FHIR Server
+            </div>
+        </header>
+
+        <main id="main" role="main">
+            <div class="grid">
+                <!-- Create Patient Card -->
+                <section class="card" aria-labelledby="create-heading">
+                    <h2 id="create-heading">
+                        <span aria-hidden="true">➕</span>
+                        Create Patient
+                    </h2>
+                    <form id="createForm" aria-label="Create new patient form">
+                        <div class="form-group">
+                            <label for="firstName">First Name *</label>
+                            <input 
+                                type="text" 
+                                id="firstName" 
+                                name="firstName"
+                                placeholder="Enter first name" 
+                                value="John" 
+                                required
+                                aria-required="true"
+                                aria-describedby="firstName-error"
+                            >
+                            <span id="firstName-error" class="sr-only" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="lastName">Last Name *</label>
+                            <input 
+                                type="text" 
+                                id="lastName" 
+                                name="lastName"
+                                placeholder="Enter last name" 
+                                value="Doe" 
+                                required
+                                aria-required="true"
+                                aria-describedby="lastName-error"
+                            >
+                            <span id="lastName-error" class="sr-only" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="birthDate">Date of Birth *</label>
+                            <input 
+                                type="date" 
+                                id="birthDate" 
+                                name="birthDate"
+                                value="1990-01-01" 
+                                required
+                                aria-required="true"
+                                aria-describedby="birthDate-error"
+                            >
+                            <span id="birthDate-error" class="sr-only" role="alert"></span>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="gender">Gender *</label>
+                            <select 
+                                id="gender" 
+                                name="gender"
+                                required
+                                aria-required="true"
+                            >
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="phone">Phone Number</label>
+                            <input 
+                                type="tel" 
+                                id="phone" 
+                                name="phone"
+                                placeholder="555-555-5555"
+                                value="555-555-5555"
+                                pattern="[0-9]{3}-[0-9]{3}-[0-9]{4}"
+                                aria-describedby="phone-hint"
+                            >
+                            <small id="phone-hint" class="form-hint">Format: 555-555-5555</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="email">Email Address</label>
+                            <input 
+                                type="email" 
+                                id="email" 
+                                name="email"
+                                placeholder="john@example.com"
+                                value="john@example.com"
+                                aria-describedby="email-hint"
+                            >
+                            <small id="email-hint" class="form-hint">We'll never share your email</small>
+                        </div>
+                        
+                        <button 
+                            type="submit" 
+                            aria-label="Create new patient record"
+                        >
+                            Create Patient
+                        </button>
+                    </form>
+                    
+                    <div id="createResult" role="status" aria-live="polite" aria-atomic="true"></div>
+                </section>
+
+                <!-- Search Patients Card -->
+                <section class="card" aria-labelledby="search-heading">
+                    <h2 id="search-heading">
+                        <span aria-hidden="true">🔍</span>
+                        Search Patients
+                    </h2>
+                    <form id="searchForm" aria-label="Search patients form">
+                        <div class="form-group">
+                            <label for="searchName">Patient Name</label>
+                            <input 
+                                type="text" 
+                                id="searchName" 
+                                name="searchName"
+                                placeholder="Search by name (or leave empty for all)"
+                                aria-describedby="search-hint"
+                            >
+                            <small id="search-hint" class="form-hint">Leave empty to show all patients</small>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="searchGender">Filter by Gender</label>
+                            <select id="searchGender" name="searchGender">
+                                <option value="">All Genders</option>
+                                <option value="male">Male</option>
+                                <option value="female">Female</option>
+                                <option value="other">Other</option>
+                                <option value="unknown">Unknown</option>
+                            </select>
+                        </div>
+                        
+                        <button 
+                            type="submit"
+                            aria-label="Search for patients"
+                        >
+                            Search Patients
+                        </button>
+                    </form>
+                    
+                    <div id="searchResults" role="region" aria-live="polite" aria-label="Search results"></div>
+                </section>
+            </div>
+
+            <!-- Recently Created Patients -->
+            <section class="card" aria-labelledby="recent-heading">
+                <h2 id="recent-heading">
+                    <span aria-hidden="true">📝</span>
+                    Recently Created Patients
+                </h2>
+                <div id="recentPatients" role="region" aria-live="polite" aria-label="Recently created patients">
+                    <p class="empty-state">No patients created yet. Create your first patient using the form above.</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Enhanced JavaScript -->
+    <script src="modern-app.js"></script>
+</body>
+</html>

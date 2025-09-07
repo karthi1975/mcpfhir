@@ -1,0 +1,48 @@
+version: '3.8'
+
+services:
+  app:
+    image: hapi-fhir-app:latest
+    container_name: hapi-fhir-app-prod
+    ports:
+      - "80:3000"
+    environment:
+      - NODE_ENV=production
+      - PORT=3000
+      - FHIR_BASE_URL=${FHIR_BASE_URL:-https://launch.smarthealthit.org/v/r4/fhir}
+    restart: always
+    networks:
+      - hapi-network
+    deploy:
+      replicas: 2
+      update_config:
+        parallelism: 1
+        delay: 10s
+      restart_policy:
+        condition: on-failure
+        delay: 5s
+        max_attempts: 3
+    logging:
+      driver: json-file
+      options:
+        max-size: "10m"
+        max-file: "3"
+
+  nginx:
+    image: nginx:alpine
+    container_name: hapi-nginx
+    ports:
+      - "443:443"
+      - "80:80"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - app
+    networks:
+      - hapi-network
+    restart: always
+
+networks:
+  hapi-network:
+    driver: bridge
