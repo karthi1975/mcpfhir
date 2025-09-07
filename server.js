@@ -17,7 +17,14 @@ const HAPI_BASE_URL = process.env.FHIR_BASE_URL || 'https://launch.smarthealthit
 // Middleware
 app.use(cors());
 app.use(express.json());
-app.use(express.static('public'));
+
+// Serve static files except for root path
+app.use(express.static('public', { index: false }));
+
+// Redirect root to modern UI
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, 'public', 'modern-index.html'));
+});
 
 // Health check
 app.get('/health', (req, res) => {

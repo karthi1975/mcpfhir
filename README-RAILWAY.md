@@ -40,8 +40,8 @@
    ```
 
 4. **Access Your App**
-   - Railway generates a domain: `https://your-app.up.railway.app`
-   - Modern UI: `https://your-app.up.railway.app/modern-index.html`
+   - Railway generates a domain: `https://your-app.up.railway.app` (Modern UI by default)
+   - Original UI: `https://your-app.up.railway.app/index.html`
 
 ## Features
 
